@@ -13,15 +13,6 @@ const Quiz = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => {
-      
-  //   }, 7000);
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [index]);
-
   return (
     <div id="quiz">
       <Question
