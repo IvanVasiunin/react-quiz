@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import ProgressBar from './ProgressBar';
+import correctAnswers from 'correct_answers';
 
-const Question = ({ text, answers, addAnswer }) => {
+const Question = ({ text, answers, id, addAnswer }) => {
   const [timeForAnswer, setTimeForAnswer] = useState(5000);
   const [loadingTime, setLoadingTime] = useState(1000);
   const [waitingTime, setWaitingTime] = useState(2000);
   const [answered, setAnswered] = useState(false);
   const [waitingforNext, setWaitingforNext] = useState(false);
   const [clicked, setClicked] = useState(null);
+  const [isCorrect, setIsCorrect] = useState(null);
 
   function decreaseAnswerTime() {
     if (timeForAnswer >= 10) {
@@ -27,20 +29,33 @@ const Question = ({ text, answers, addAnswer }) => {
     }
   }
 
-  function handleClickAnswer(e) {
+  function handleClickAnswer(index) {
     if (!answered && !waitingforNext) {
-      e.target.classList.add('selected');
+      setClicked(index);
       setAnswered(true);
     }
-    
   }
 
   useEffect(() => {
+    if(timeForAnswer === 0 && !clicked) {
+      setAnswered(true);
+    }
     if (loadingTime === 0) {
+      setIsCorrect(correctAnswers[id] === answers[clicked]);
       setWaitingforNext(true);
       setAnswered(false);
     }
-  }, [loadingTime]);
+    if (waitingTime === 0) {
+      let dataToWrite;
+      if(clicked !== null) {
+        dataToWrite = [answers[clicked], correctAnswers[id] === answers[clicked]];
+      } else {
+        dataToWrite = ['You skipped the question', false];
+      }
+      addAnswer(dataToWrite);
+    }
+  }, [loadingTime, timeForAnswer, clicked, waitingTime, addAnswer, answers, id]);
+
 
   return (
     <div id="question">
@@ -71,7 +86,20 @@ const Question = ({ text, answers, addAnswer }) => {
         {answers.map((answer, index) => {
           return (
             <li key={index} className="answer">
-              <button onClick={handleClickAnswer}>{answer}</button>
+              <button
+                className={`${clicked === index ? 'selected' : ''} ${
+                  !waitingforNext
+                    ? ''
+                    : clicked !== index
+                    ? ''
+                    : isCorrect
+                    ? 'correct'
+                    : 'wrong'
+                }`}
+                onClick={() => handleClickAnswer(index)}
+              >
+                {answer}
+              </button>
             </li>
           );
         })}
