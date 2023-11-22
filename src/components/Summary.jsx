@@ -10,9 +10,6 @@ const Summary = ({ userAnswers }) => {
   const correctAnswersShare = Math.round((correctAnswers.length / userAnswers.length) * 100);
   const wrongAnswersShare = 100 - skippedAnswersShare - correctAnswersShare;
 
-  console.log(skippedAnswers, skippedAnswersShare)
-  console.log(correctAnswers, correctAnswersShare)
-
   return (
     <div id="summary">
       <img src={quiz_completed} alt="Quiz completed" />
@@ -46,7 +43,7 @@ const Summary = ({ userAnswers }) => {
             <li key={index}>
               <h3>{index + 1}</h3>
               <p className="question">{QUESTIONS[index].text}</p>
-              <p className={cssClass}>{answer ? 'Skipped': ''}</p>
+              <p className={cssClass}>{answer ?? 'Skipped'}</p>
             </li>
           );
         })}
