@@ -27,3 +27,4 @@ In order to run the project:
 - TailwindCSS
 - Javascript
 - React.js (useRef, useState, useEffect, useCallback)
+- 
